@@ -1,0 +1,28 @@
+ПЕТРОВ АЛЕКСЕЙ СЕРГЕЕВИЧ
+Желаемая позиция: data engineer
+
+КОНТАКТЫ
+email: alexey.petrov@example.org
+телефон: +7 916 123-45-67
+telegram: @apetrov
+город: Москва
+
+О СЕБЕ
+Data Engineer с опытом построения пайплайнов.
+Python, Spark, Airflow, dbt.
+
+ОПЫТ РАБОТЫ
+2021—н.в. — ООО «Данные Плюс», Data Engineer
+- проектирование пайплайнов ETL/ELT
+- миграция хранилища на ClickHouse
+2018—2021 — АО «ИнфоТек», аналитик
+- отчётность и дашборды
+
+ОБРАЗОВАНИЕ
+2014—2018 — МГУ, прикладная математика и информатика
+
+НАВЫКИ
+Python, SQL, Spark, Airflow, dbt, ClickHouse, Docker, Git, Kafka, Redis, Tableau, Linux
+
+ЯЗЫКИ
+Русский — родной; Английский — B2

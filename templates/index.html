@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description"
+        content="Конвертер резюме: загрузите файл .pdf, .txt или .md и
+        получите резюме в стилях для LinkedIn, Xing, hh.ru, Indeed и
+        других площадок — в форматах .txt, .md, .json и .html.">
+  <title>Конвертер резюме — стили для LinkedIn, Xing, hh.ru</title>
+  <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1117'/%3E%3Cpath d='M8 10h16v3H8zM8 15h16v3H8zM8 20h10v3H8z' fill='%237D8BFF'/%3E%3C/svg%3E">
+  <!-- Inter — SIL Open Font License, бесплатна для коммерции -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- ===================================================== ШАПКА -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/" aria-label="Конвертер резюме — на главную">
+        Резюме<span>Стиль</span>
+      </a>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <ul>
+          <li><a href="#features">Возможности</a></li>
+          <li><a href="#upload">Загрузка</a></li>
+          <li><a href="#styles">Стили</a></li>
+          <li><a href="#result">Результат</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+
+      <!-- ========== ОБЩАЯ ИНФОРМАЦИЯ О ВОЗМОЖНОСТЯХ ========== -->
+      <section id="features" aria-labelledby="features-h">
+        <h1 id="features-h">Конвертер резюме в <span class="accent">8 стилей</span>
+          для международных площадок</h1>
+        <p class="lede">Загрузите резюме в формате <strong>.pdf</strong>,
+          <strong>.txt</strong> или <strong>.md</strong> — сервис распознает
+          разделы, сохранит их во временный <strong>.json</strong>,
+          переформатирует в выбранный стиль и выдаст готовые файлы
+          <strong>.txt, .md, .json и .html</strong> для скачивания.</p>
+
+        <div class="cards-grid">
+          <article class="card">
+            <span class="card-icon" aria-hidden="true">📄</span>
+            <h3>Любой исходный формат</h3>
+            <p>Принимаем .pdf, .txt и .md. Парсер определяет ФИО,
+              контакты, опыт, образование, навыки и другие разделы.</p>
+          </article>
+          <article class="card">
+            <span class="card-icon" aria-hidden="true">🎨</span>
+            <h3>8 стилей для площадок</h3>
+            <p>Готовые шаблоны под LinkedIn, Xing, hh.ru, Indeed,
+              Glassdoor, Europass, Monster и печатный вариант A4.</p>
+          </article>
+          <article class="card">
+            <span class="card-icon" aria-hidden="true">📄</span>
+            <h3>Четыре формата на выходе</h3>
+            <p>Каждое преобразование завершается набором файлов:
+              .txt, .md, .json и стилизованный .html — скачивайте
+              кнопками по готовности.</p>
+          </article>
+          <article class="card">
+            <span class="card-icon" aria-hidden="true">📏</span>
+            <h3>Печатный A4 / Legal</h3>
+            <p>Отдельный стиль «1 страница»: шрифт 12 pt,
+              межстрочный интервал 1,5 — только ФИО, контакты
+              и последняя актуальная информация.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ========== ФОРМА: ЗАГРУЗКА + СТИЛИ + ГЕНЕРАЦИЯ ========== -->
+      <form method="post" enctype="multipart/form-data"
+            class="converter-grid" novalidate>
+
+        <section id="upload" class="panel" aria-labelledby="upload-h">
+          <h2 id="upload-h">Загрузка <span class="h2-accent">резюме</span></h2>
+          <label class="field-label" for="resume-file">
+            Файл резюме (.pdf, .txt, .md)
+          </label>
+          <div class="drop-zone">
+            <input type="file" id="resume-file" name="resume"
+                   accept=".pdf,.txt,.md" required
+                   aria-describedby="file-hint">
+            <div class="dz-title">Нажмите, чтобы выбрать файл</div>
+            <div class="dz-sub">или перетащите файл сюда —
+              до 5 МБ, .pdf / .txt / .md</div>
+          </div>
+          <p class="file-name" id="file-name" aria-live="polite"></p>
+          <span class="field-hint" id="file-hint">
+            Файл используется только для конвертации и удаляется
+            через 2 часа. Промежуточный результат сохраняется
+            во временный JSON.
+          </span>
+        </section>
+
+        <section id="styles" class="panel" aria-labelledby="styles-h">
+          <h2 id="styles-h">Переключатель <span class="h2-accent">стилей</span></h2>
+          <div class="style-grid" role="radiogroup"
+               aria-label="Стиль резюме" id="style-grid">
+            {% for s in styles %}
+            <button type="button" class="style-card"
+                    data-style="{{ s.id }}"
+                    aria-pressed="{{ 'true' if s.id == selected else 'false' }}">
+              <span class="style-site">{{ s.site }}</span>
+              <span class="style-name">{{ s.name }}</span>
+              <span class="style-desc">{{ s.desc }}</span>
+              {% if s.one_page %}
+              <span class="style-badge">1 страница · 12 pt · 1,5</span>
+              {% endif %}
+            </button>
+            {% endfor %}
+          </div>
+          <input type="hidden" name="style" id="style-input"
+                 value="{{ selected }}">
+        </section>
+
+        <div class="full-width">
+          {% if error %}
+          <p class="alert" role="alert">{{ error }}</p>
+          {% endif %}
+          <button type="submit" id="generate-btn"
+                  class="btn btn-primary btn-generate">
+            Сгенерировать резюме в выбранном стиле
+          </button>
+        </div>
+      </form>
+
+      <!-- ========== РЕЗУЛЬТАТ И СКАЧИВАНИЕ ========== -->
+      <section id="result" class="panel" aria-labelledby="result-h"
+               tabindex="-1">
+        <h2 id="result-h" tabindex="-1">Готовое резюме и
+          <span class="h2-accent">скачивание</span></h2>
+
+        {% if result %}
+        <p class="status-ok" role="status">
+          ✅ Конвертация #{{ result.conversion_id }} завершена:
+          стиль «{{ result.style.name }}» ({{ result.style.site }}).
+          Распознано разделов: {{ result.parsed_stats.sections_found }}.
+        </p>
+
+        <ul class="result-meta">
+          <li>Исходный файл: <strong>{{ result.parsed.source.filename }}</strong>
+            ({{ result.parsed.source.format|upper }},
+            {{ result.parsed_stats.chars }} символов)</li>
+          <li>Разделы: {% for t in result.sections_found %}
+            <span>{{ t }}</span>{% if not loop.last %}; {% endif %}
+            {% endfor %}</li>
+          <li>Временный промежуточный JSON:
+            <strong>{{ result.conversion_id }}/{{ result.conversion_id }}_input.json</strong>
+            и <strong>{{ result.conversion_id }}_{{ result.style.id }}_styled.json</strong>
+            (хранятся 2 часа)</li>
+        </ul>
+
+        <ul class="section-chips" aria-label="Распознанные разделы">
+          {% for s in result.parsed.sections %}
+          <li>{{ s.title }}</li>
+          {% endfor %}
+        </ul>
+
+        <div class="download-row" role="group"
+             aria-label="Скачать готовые файлы" style="margin-top:1rem">
+          <a class="btn btn-download"
+             href="{{ url_for('download', cid=result.conversion_id, fname=result.files.txt) }}"
+             download="{{ result.files.txt }}">
+            <span class="ext">txt</span> Скачать .txt
+          </a>
+          <a class="btn btn-download"
+             href="{{ url_for('download', cid=result.conversion_id, fname=result.files.md) }}"
+             download="{{ result.files.md }}">
+            <span class="ext">md</span> Скачать .md
+          </a>
+          <a class="btn btn-download"
+             href="{{ url_for('download', cid=result.conversion_id, fname=result.files.json) }}"
+             download="{{ result.files.json }}">
+            <span class="ext">json</span> Скачать .json
+          </a>
+          <a class="btn btn-download"
+             href="{{ url_for('download', cid=result.conversion_id, fname=result.files.html) }}"
+             download="{{ result.files.html }}">
+            <span class="ext">html</span> Скачать .html
+          </a>
+        </div>
+
+        <details class="preview">
+          <summary>Показать промежуточный JSON (распознанные разделы)</summary>
+          <pre>{{ result.parsed | tojson(indent=2) }}</pre>
+        </details>
+        <details class="preview">
+          <summary>Показать итоговый JSON в стиле
+            «{{ result.style.name }}»</summary>
+          <pre>{{ result.styled | tojson(indent=2) }}</pre>
+        </details>
+
+        {% else %}
+        <p class="result-meta">
+          Резюме ещё не сгенерировано. Загрузите файл, выберите стиль
+          и нажмите кнопку генерации — кнопки скачивания
+          активируются по готовности.
+        </p>
+        <div class="download-row" role="group"
+             aria-label="Скачать готовые файлы" style="margin-top:1rem">
+          <a class="btn btn-download" aria-disabled="true"
+             aria-label="Скачать .txt — файл ещё не готов">
+            <span class="ext">txt</span> Скачать .txt
+          </a>
+          <a class="btn btn-download" aria-disabled="true"
+             aria-label="Скачать .md — файл ещё не готов">
+            <span class="ext">md</span> Скачать .md
+          </a>
+          <a class="btn btn-download" aria-disabled="true"
+             aria-label="Скачать .json — файл ещё не готов">
+            <span class="ext">json</span> Скачать .json
+          </a>
+          <a class="btn btn-download" aria-disabled="true"
+             aria-label="Скачать .html — файл ещё не готов">
+            <span class="ext">html</span> Скачать .html
+          </a>
+        </div>
+        {% endif %}
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===================================================== ПОДВАЛ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Резюме Стиль</strong> — конвертер резюме.
+        Файлы обрабатываются на сервере и удаляются через 2 часа.</p>
+      <p>Шрифты: Inter (SIL Open Font License) и системные
+        DejaVu Sans / Liberation Sans — бесплатны для коммерческого
+        использования. Палитра: #0E1117 · #7D8BFF · #57D6C2 · #F2B544.</p>
+      <p>Соответствие W3C/WCAG: семантика
+        header / nav / main / section / article / footer, lang="ru",
+        skip-link, видимый фокус, aria-pressed,
+        prefers-reduced-motion.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* --- выбор стиля (aria-pressed + скрытое поле формы) --- */
+      var grid = document.getElementById("style-grid");
+      var input = document.getElementById("style-input");
+      var cards = Array.prototype.slice.call(
+        grid.querySelectorAll(".style-card"));
+      cards.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          cards.forEach(function (b) {
+            b.setAttribute("aria-pressed",
+              b === btn ? "true" : "false");
+          });
+          input.value = btn.getAttribute("data-style");
+        });
+      });
+
+      /* --- имя выбранного файла --- */
+      var fileInput = document.getElementById("resume-file");
+      var fileName = document.getElementById("file-name");
+      fileInput.addEventListener("change", function () {
+        fileName.textContent = fileInput.files.length
+          ? "Выбран файл: " + fileInput.files[0].name
+          : "";
+      });
+
+      /* --- состояние кнопки генерации --- */
+      var form = document.querySelector("form.converter-grid");
+      var genBtn = document.getElementById("generate-btn");
+      form.addEventListener("submit", function () {
+        genBtn.disabled = true;
+        genBtn.setAttribute("aria-busy", "true");
+        genBtn.innerHTML =
+          '<span class="spinner" aria-hidden="true"></span>' +
+          "Конвертирую резюме…";
+      });
+
+      /* --- фокус на результат после POST --- */
+      var result = document.getElementById("result-h");
+      if (document.querySelector(".status-ok") && result) {
+        result.focus({ preventScroll: false });
+      }
+    })();
+  </script>
+</body>
+</html>
